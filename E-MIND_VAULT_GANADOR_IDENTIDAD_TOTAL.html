@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="E-Mind Vault - Ahorro colectivo inteligente en Web3 usando $ASTR y Startale Cloud Service." name="description"/>
+<title>E-MIND VAULT | DApp Ganadora</title>
+<link href="arwh.png" rel="icon" type="image/png"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; }
+    .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0, 255, 160, 0.2); transition: all 0.3s ease-in-out; }
+    .fade-in { animation: fadeIn 1s ease-in-out forwards; opacity: 0; }
+    @keyframes fadeIn { to { opacity: 1; } }
+  </style>
+</head>
+<body>
+<!-- Sidebar de navegación -->
+<aside class="bg-black bg-opacity-60 w-64 p-6 space-y-6 hidden md:block pt-8 pb-4 space-y-4">
+<div class="text-green-400 text-2xl font-bold">E-MIND VAULT</div>
+<div class="flex flex-col items-center space-y-2">
+<img alt="Avatar" class="w-24 h-24 rounded-full border-4 border-green-400 shadow-lg" id="sidebarAvatar" src="arwh.png"/>
+<span class="text-white font-semibold mt-2 text-sm text-center">Identidad NFT</span>
+</div>
+<nav class="space-y-3">
+<button class="block w-full text-left text-white hover:text-green-400" onclick="showSection('dashboard')">🏠 Monedero</button>
+<button class="block w-full text-left text-white hover:text-green-400" onclick="showSection('vaults')">🔐 Mis Vaults</button>
+<button class="block w-full text-left text-white hover:text-green-400" onclick="showSection('create')">➕ Crear Vault</button>
+<button class="block w-full text-left text-white hover:text-green-400" onclick="showSection('profile')">👤 Perfil</button>
+<button class="block w-full text-left text-white hover:text-green-400" onclick="showSection('impact')">📊 Impacto</button>
+</nav>
+</aside>
+<!-- Contenido principal -->
+<main class="flex-1 p-6">
+<!-- Dashboard -->
+<section class="fade" id="dashboard">
+<h1 class="text-3xl font-bold mb-4">Monedero</h1>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-zinc-800 p-6 rounded-2xl shadow-xl text-center">
+<h3 class="text-xl font-semibold mb-2">Balance en $CIVE</h3>
+<p class="text-3xl text-green-400 font-mono">1,250</p>
+</div>
+<div class="bg-zinc-800 p-6 rounded-2xl shadow-xl text-center">
+<h3 class="text-xl font-semibold mb-2">Reputación NFT</h3>
+<p class="text-lg text-white">Nivel 2 - Ahorrador Cumplido</p>
+</div>
+<div class="bg-zinc-800 p-6 rounded-2xl shadow-xl text-center">
+<h3 class="text-xl font-semibold mb-2">Vaults Activos</h3>
+<p class="text-green-300">2</p>
+</div>
+</div>
+</section>
+<!-- Vaults -->
+<section class="hidden-section fade" id="vaults">
+<h1 class="text-3xl font-bold mb-4">Mis Vaults</h1>
+<div class="text-right mb-4">
+<button class="text-sm text-red-400 hover:text-red-600 font-bold" onclick="borrarVaults()">🗑 Borrar todos los Vaults</button>
+</div>
+<div class="grid gap-6 md:grid-cols-2" id="vaultList">
+<!-- Vaults activos aquí -->
+</div>
+<div class="text-center text-gray-400 hidden" id="noVaults">
+    Aún no has creado ningún Vault.
+  </div>
+<script>
+    function cargarVaults() {
+      const vaultList = document.getElementById("vaultList");
+      const noVaults = document.getElementById("noVaults");
+      vaultList.innerHTML = "";
+      const vaults = JSON.parse(localStorage.getItem("vaults")) || [];
+      if (vaults.length === 0) {
+        noVaults.classList.remove("hidden");
+      } else {
+        noVaults.classList.add("hidden");
+        vaults.forEach((vault, index) => {
+          const card = document.createElement("div");
+          card.className = "bg-zinc-800 p-6 rounded-2xl shadow-lg";
+          card.innerHTML = `
+            <h3 class="text-2xl font-semibold mb-2">${vault.nombre}</h3>
+            <p>Participantes: ${vault.participantes}</p>
+            <p>Duración: ${vault.duracion} meses</p>
+            <p>Frecuencia: ${vault.frecuencia}</p>
+            <p>Progreso: ${vault.progreso} aportes</p>
+          `;
+          vaultList.appendChild(card);
+        });
+      }
+    }
+
+    function borrarVaults() {
+      if (confirm("¿Seguro que quieres borrar todos los vaults? Esta acción no se puede deshacer.")) {
+        localStorage.removeItem("vaults");
+        cargarVaults();
+      }
+    }
+
+    // Ejecutar al mostrar sección
+    cargarVaults();
+  </script>
+</section>
+<h1 class="text-3xl font-bold mb-4">Mis Vaults</h1>
+<div class="grid gap-6 md:grid-cols-2" id="vaultList">
+<!-- Vaults activos aquí -->
+</div>
+<div class="text-center text-gray-400 hidden" id="noVaults">
+      Aún no has creado ningún Vault.
+    </div>
+<script>
+      const vaultList = document.getElementById("vaultList");
+      const noVaults = document.getElementById("noVaults");
+      const vaults = JSON.parse(localStorage.getItem("vaults")) || [];
+      if (vaults.length === 0) {
+        noVaults.classList.remove("hidden");
+      } else {
+        vaults.forEach((vault, index) => {
+          const card = document.createElement("div");
+          card.className = "bg-zinc-800 p-6 rounded-2xl shadow-lg";
+          card.innerHTML = `
+            <h3 class="text-2xl font-semibold mb-2">${vault.nombre}</h3>
+            <p>Participantes: ${vault.participantes}</p>
+            <p>Duración: ${vault.duracion} meses</p>
+            <p>Frecuencia: ${vault.frecuencia}</p>
+            <p>Progreso: ${vault.progreso} aportes</p>
+          `;
+          vaultList.appendChild(card);
+        });
+      }
+    </script>
+<!-- Crear Vault -->
+<section class="hidden-section fade" id="create">
+<h1 class="text-3xl font-bold mb-4">Crear Vault</h1>
+<form class="bg-zinc-800 p-6 rounded-2xl shadow-xl max-w-xl space-y-4" id="vaultForm">
+<input class="w-full px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-700" id="nombre" placeholder="Nombre del Vault" required="" type="text"/>
+<input class="w-full px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-700" id="participantes" max="100" min="2" placeholder="Participantes" required="" type="number"/>
+<input class="w-full px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-700" id="duracion" max="24" min="1" placeholder="Duración (meses)" required="" type="number"/>
+<select class="w-full px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-700" id="frecuencia" required="">
+<option>Semanal</option>
+<option>Quincenal</option>
+<option>Mensual</option>
+</select>
+<button class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-xl font-bold w-full" type="submit">Crear</button>
+<p class="text-center text-green-400 mt-4" id="mensaje"></p>
+</form>
+<script>
+    
+      e.preventDefault();
+      const nombre = document.getElementById("nombre").value;
+      const participantes = document.getElementById("participantes").value;
+      const duracion = document.getElementById("duracion").value;
+      const frecuencia = document.getElementById("frecuencia").value;
+
+      const nuevoVault = {
+        nombre,
+        participantes,
+        duracion,
+        frecuencia,
+        progreso: 0,
+        reputacion: 0
+      };
+
+      let vaults = JSON.parse(localStorage.getItem("vaults")) || [];
+      vaults.push(nuevoVault);
+      localStorage.setItem("vaults", JSON.stringify(vaults));
+
+      document.getElementById("mensaje").textContent = "✅ Vault creado con éxito.";
+
+      // limpiar campos y redirigir visualmente
+      this.reset();
+      setTimeout(() => showSection('vaults'), 1500);
+    });
+  </script>
+</section>
+<h1 class="text-3xl font-bold mb-4">Crear Vault</h1>
+<form class="bg-zinc-800 p-6 rounded-2xl shadow-xl max-w-xl space-y-4">
+<input class="w-full px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-700" placeholder="Nombre del Vault" type="text"/>
+<input class="w-full px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-700" placeholder="Participantes" type="number"/>
+<input class="w-full px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-700" placeholder="Duración (meses)" type="number"/>
+<select class="w-full px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-700">
+<option>Semanal</option>
+<option>Quincenal</option>
+<option>Mensual</option>
+</select>
+<button class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-xl font-bold w-full" type="submit">Crear</button>
+</form>
+<!-- Perfil -->
+<section class="hidden-section fade" id="profile">
+<h1 class="text-3xl font-bold mb-4">Perfil de Usuario</h1>
+<section class="bg-zinc-800 p-6 rounded-2xl shadow-xl text-center mb-6">
+<h2 class="text-2xl font-semibold mb-4">NFT de Reputación Evolutiva</h2>
+<img alt="NFT Reputación" class="w-32 mx-auto mb-4 rounded-full border-4" id="nftImage" src="arwh.png"/>
+<p class="text-lg" id="nivelTexto">Nivel de Reputación: --</p>
+<p class="text-sm text-gray-300">Tu NFT evoluciona visualmente conforme avanzas en tus ahorros.</p>
+</section>
+<section class="bg-zinc-800 p-6 rounded-2xl shadow-xl mt-8">
+<h3 class="text-xl font-semibold mb-4 text-center">Selecciona tu Capibara NFT</h3>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-4 justify-center" id="avatarGallery">
+<div class="text-center">
+<img class="avatar-option rounded-xl border-4 border-transparent cursor-pointer mx-auto" data-id="cap1" src="capibara_1.png"/>
+<p class="text-sm mt-2">🌱 Capy Verde<br/><span class="text-green-400">Común</span></p>
+</div>
+<div class="text-center">
+<img class="avatar-option rounded-xl border-4 border-transparent cursor-pointer mx-auto" data-id="cap2" src="capibara_2.png"/>
+<p class="text-sm mt-2">🔥 Capy Fuego<br/><span class="text-orange-400">Épico</span></p>
+</div>
+<div class="text-center">
+<img class="avatar-option rounded-xl border-4 border-transparent cursor-pointer mx-auto" data-id="cap3" src="capibara_3.png"/>
+<p class="text-sm mt-2">💧 Capy Agua<br/><span class="text-blue-400">Común</span></p>
+</div>
+<div class="text-center">
+<img class="avatar-option rounded-xl border-4 border-transparent cursor-pointer mx-auto" data-id="cap4" src="capibara_4.png"/>
+<p class="text-sm mt-2">⚡ Capy Rayo<br/><span class="text-yellow-300">Raro</span></p>
+</div>
+<div class="text-center">
+<img class="avatar-option rounded-xl border-4 border-transparent cursor-pointer mx-auto" data-id="cap5" src="capibara_5.png"/>
+<p class="text-sm mt-2">🌸 Capy Flor<br/><span class="text-pink-400">Épico</span></p>
+</div>
+<div class="text-center">
+<img class="avatar-option rounded-xl border-4 border-transparent cursor-pointer mx-auto" data-id="cap6" src="capibara_6.png"/>
+<p class="text-sm mt-2">🌙 Capy Nocturno<br/><span class="text-purple-400">Legendario</span></p>
+</div>
+</div>
+</section>
+<script>
+  const avatarOptions = document.querySelectorAll(".avatar-option");
+  const currentNFT = document.getElementById("nftImage");
+
+  function updateSelectedAvatar(id, src) {
+    localStorage.setItem("capibaraNFT", JSON.stringify({ id, src }));
+    if (currentNFT) currentNFT.src = src;
+    const sidebar = document.getElementById("sidebarAvatar");
+    if (sidebar) sidebar.src = src;
+    avatarOptions.forEach(opt => opt.classList.remove("border-green-400"));
+    event.target.classList.add("border-green-400");
+  }
+
+  avatarOptions.forEach(opt => {
+    opt.addEventListener("click", (event) => {
+      const id = opt.getAttribute("data-id");
+      const src = opt.src;
+      updateSelectedAvatar(id, src);
+    });
+  });
+
+  const savedNFT = JSON.parse(localStorage.getItem("capibaraNFT"));
+  if (savedNFT && currentNFT) {
+    currentNFT.src = savedNFT.src;
+    document.querySelector(`img[data-id="${savedNFT.id}"]`)?.classList.add("border-green-400");
+    const sidebar = document.getElementById("sidebarAvatar");
+    if (sidebar) sidebar.src = savedNFT.src;
+  }
+</script>
+<h3 class="text-xl font-semibold mb-4">Selecciona tu Capibara NFT</h3>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-4" id="avatarGallery">
+<img class="avatar-option rounded-full border-4 cursor-pointer hover:border-green-400" data-id="cap1" src="https://i.imgur.com/3M90MKh.png"/>
+<img class="avatar-option rounded-full border-4 cursor-pointer hover:border-green-400" data-id="cap2" src="https://i.imgur.com/xDdXt9O.png"/>
+<img class="avatar-option rounded-full border-4 cursor-pointer hover:border-green-400" data-id="cap3" src="https://i.imgur.com/9tf1RE5.png"/>
+<img class="avatar-option rounded-full border-4 cursor-pointer hover:border-green-400" data-id="cap4" src="https://i.imgur.com/OmxJxVE.png"/>
+<img class="avatar-option rounded-full border-4 cursor-pointer hover:border-green-400" data-id="cap5" src="https://i.imgur.com/7dKSkX9.png"/>
+<img class="avatar-option rounded-full border-4 cursor-pointer hover:border-green-400" data-id="cap6" src="https://i.imgur.com/yKbOUVw.png"/>
+</div>
+</section>
+<script>
+  const avatarOptions = document.querySelectorAll(".avatar-option");
+  const currentNFT = document.getElementById("nftImage");
+
+  function updateSelectedAvatar(id, src) {
+    localStorage.setItem("capibaraNFT", JSON.stringify({ id, src }));
+    if (currentNFT) currentNFT.src = src;
+    avatarOptions.forEach(opt => opt.classList.remove("border-green-400"));
+    event.target.classList.add("border-green-400");
+  }
+
+  avatarOptions.forEach(opt => {
+    opt.addEventListener("click", (event) => {
+      const id = opt.getAttribute("data-id");
+      const src = opt.src;
+      updateSelectedAvatar(id, src);
+    });
+  });
+
+  // Mostrar avatar guardado
+  const savedNFT = JSON.parse(localStorage.getItem("capibaraNFT"));
+  if (savedNFT && currentNFT) {
+    currentNFT.src = savedNFT.src;
+    document.querySelector(`img[data-id="${savedNFT.id}"]`)?.classList.add("border-green-400");
+  }
+</script>
+<section class="bg-zinc-800 p-6 rounded-2xl shadow-xl">
+<h3 class="text-xl font-semibold mb-4">Logros Desbloqueados</h3>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center" id="badges"></div>
+</section>
+<script>
+      const aportes = parseInt(localStorage.getItem("vault_aportes") || "0");
+      const image = document.getElementById("nftImage");
+      const nivelTexto = document.getElementById("nivelTexto");
+      const badgeContainer = document.getElementById("badges");
+
+      let nivel = 1;
+      if (aportes >= 2) nivel = 2;
+      if (aportes >= 4) nivel = 3;
+      if (aportes >= 6) nivel = 4;
+      if (aportes >= 8) nivel = 5;
+
+      const niveles = {
+        1: "Novato Responsable",
+        2: "Ahorrador Constante",
+        3: "Ahorrador Cumplido",
+        4: "Ejemplo Comunitario",
+        5: "Líder de Confianza"
+      };
+
+      const logros = [];
+      if (aportes >= 1) logros.push({ nombre: "🥉 Primer Aporte", descripcion: "Tu primer paso al ahorro." });
+      if (aportes >= 5) logros.push({ nombre: "🥈 5 Aportes", descripcion: "Constancia demostrada." });
+      if (aportes >= 10) logros.push({ nombre: "🥇 Vault Maestro", descripcion: "Completaste un ciclo de ahorro." });
+
+      image.classList.add(`level-${nivel}`);
+      nivelTexto.textContent = "Nivel de Reputación: " + niveles[nivel];
+
+      if (logros.length === 0) {
+        badgeContainer.innerHTML = "<p class='text-gray-400 text-sm'>Aún no has desbloqueado logros.</p>";
+      } else {
+        logros.forEach(badge => {
+          const el = document.createElement("div");
+          el.className = "bg-zinc-700 p-4 rounded-xl shadow text-sm";
+          el.innerHTML = `<div class="text-3xl mb-2">${badge.nombre}</div><div>${badge.descripcion}</div>`;
+          badgeContainer.appendChild(el);
+        });
+      }
+    </script>
+<!-- Impacto -->
+<section class="hidden-section fade" id="impact">
+<h1 class="text-3xl font-bold mb-4">Impacto Comunitario</h1>
+<p class="text-gray-300">Estadísticas globales de ahorro.</p>
+</section>
+</main>
+<script>
+    function showSection(id) {
+      const sections = document.querySelectorAll("main > section");
+      sections.forEach(section => {
+        section.classList.add("hidden-section");
+      });
+      const target = document.getElementById(id);
+      if (target) {
+        target.classList.remove("hidden-section");
+        target.classList.add("fade");
+      }
+    }
+    // Mostrar dashboard por defecto
+    showSection("dashboard");
+  </script>
+<!-- Modal de confirmación personalizado -->
+<div class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50" id="confirmModal">
+<div class="bg-zinc-900 p-6 rounded-2xl shadow-2xl text-center space-y-4 w-80 animate-fadeIn">
+<img alt="Capibara" class="mx-auto w-24 rounded-full border-4 border-green-400" src="https://media.tenor.com/EFCE8Hjo0N8AAAAi/capybara-capybara-dance.gif"/>
+<h2 class="text-xl font-bold text-green-300">¿Estás segura, Ariadna?</h2>
+<p class="text-gray-300 text-sm">Eliminarás <strong>todos los Vaults</strong> guardados. Esta acción no se puede deshacer.</p>
+<div class="flex justify-center space-x-4 pt-2">
+<button class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-xl font-bold" onclick="confirmDelete()">Sí, borrar</button>
+<button class="bg-zinc-700 hover:bg-zinc-600 px-4 py-2 rounded-xl font-bold" onclick="closeModal()">Cancelar</button>
+</div>
+</div>
+</div>
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+</style>
+<script>
+  function borrarVaults() {
+    document.getElementById("confirmModal").classList.remove("hidden");
+  }
+
+  function closeModal() {
+    document.getElementById("confirmModal").classList.add("hidden");
+  }
+
+  function confirmDelete() {
+    localStorage.removeItem("vaults");
+    closeModal();
+    cargarVaults();
+  }
+</script>
+<script>
+  const avatarSidebar = document.getElementById("sidebarAvatar");
+  const savedNFT = JSON.parse(localStorage.getItem("capibaraNFT"));
+  if (savedNFT && avatarSidebar) {
+    avatarSidebar.src = savedNFT.src;
+  }
+</script>
+<script>
+  const savedAportes = parseInt(localStorage.getItem("vault_aportes") || "0");
+  const sidebarAvatar = document.getElementById("sidebarAvatar");
+  const nftImage = document.getElementById("nftImage");
+
+  if (savedAportes >= 8) {
+    sidebarAvatar.classList.add("nft-aura");
+    if (nftImage) nftImage.classList.add("nft-aura");
+  }
+</script>
+<script>
+  const walletAddress = localStorage.getItem("walletAddress");
+  if (walletAddress) {
+    const display = walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4);
+    const userInfo = document.getElementById("walletInfo");
+    userInfo.innerHTML = `
+      <span class="text-sm text-gray-300">${display}</span>
+      <button onclick="copiarWallet()" class="ml-2 px-2 py-1 text-xs bg-zinc-700 hover:bg-green-600 rounded">📋 Copiar</button>
+    `;
+  }
+
+  function copiarWallet() {
+    const fullAddress = localStorage.getItem("walletAddress");
+    navigator.clipboard.writeText(fullAddress).then(() => {
+      alert("Dirección copiada: " + fullAddress);
+    });
+  }
+</script>
+<!-- INICIO: Funciones Web3 integradas con contrato -->
+<script>
+  let provider, signer, contract;
+  const contractAddress = "DIRECCION_DEL_CONTRATO"; // ← cambia esto luego por la dirección real
+  const abi = [
+    "function createVault(string memory _name, uint256 _minParticipants) public",
+    "function getVaultInfo(uint256) public view returns (tuple(string,address,uint256,uint256,uint256,bool))"
+  ];
+
+  async function connectWallet() {
+    if (typeof window.ethereum !== "undefined") {
+      provider = new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      signer = provider.getSigner();
+      const address = await signer.getAddress();
+      contract = new ethers.Contract(contractAddress, abi, signer);
+      console.log("✅ Wallet conectada:", address);
+    } else {
+      alert("Instala MetaMask para usar esta app.");
+    }
+  }
+
+  async function crearVaultOnChain(name, min) {
+    try {
+      const tx = await contract.createVault(name, min);
+      await tx.wait();
+      alert("✅ Vault creado en blockchain.");
+    } catch (err) {
+      console.error(err);
+      alert("Error al crear vault: " + err.message);
+    }
+  }
+</script>
+<!-- FIN: Funciones Web3 integradas -->
+<!-- SECCIÓN: Depositar en Vault -->
+<section class="hidden p-6" id="depositar">
+<h2 class="text-xl font-bold mb-4 text-green-400">💰 Depositar en Vault</h2>
+<form class="space-y-4" id="depositForm">
+<input class="w-full p-2 rounded bg-gray-800 text-white border border-green-400" id="depositVaultId" placeholder="ID del Vault" required="" type="number"/>
+<input class="w-full p-2 rounded bg-gray-800 text-white border border-green-400" id="depositAmount" placeholder="Cantidad en ASTR" required="" type="number"/>
+<button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl font-bold w-full" type="submit">📤 Enviar ASTR</button>
+</form>
+<div class="text-green-300 mt-4" id="depositMensaje"></div>
+</section>
+<!-- INICIO: Función depositToVault -->
+<script>
+  document.getElementById("depositForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const vaultId = parseInt(document.getElementById("depositVaultId").value);
+    const amount = parseFloat(document.getElementById("depositAmount").value);
+
+    if (isNaN(vaultId) || isNaN(amount) || amount <= 0) {
+      alert("Ingresa valores válidos.");
+      return;
+    }
+
+    try {
+      const tx = await contract.depositToVault(vaultId, {
+        value: ethers.utils.parseEther(amount.toString())
+      });
+      await tx.wait();
+      
+      const vaultInfo = await contract.getVaultInfo(vaultId);
+      const balanceEther = ethers.utils.formatEther(vaultInfo.totalSaved);
+      document.getElementById("depositMensaje").textContent = "✅ Depósito exitoso. Total en vault: " + balanceEther + " ASTR.";
+
+    } catch (err) {
+      console.error(err);
+      alert("Error al depositar: " + err.message);
+    }
+  });
+</script>
+<!-- FIN: Función depositToVault -->
+<!-- SECCIÓN: Mostrar Vaults On-Chain -->
+<section class="p-6 fade-in" id="vaultsOnChain">
+<h2 class="text-xl font-bold mb-4 text-green-400">📊 Vaults On-Chain</h2>
+<button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl font-bold mb-4" onclick="mostrarVaults()">🔍 Ver Vaults</button>
+<table class="w-full table-auto text-sm bg-gray-800 text-white border border-green-400 rounded-xl overflow-hidden">
+<thead>
+<tr class="bg-green-700 text-white">
+<th class="p-2">ID</th>
+<th class="p-2">Nombre</th>
+<th class="p-2">Min. Participantes</th>
+<th class="p-2">Total Ahorros (ASTR)</th>
+<th class="p-2">Estado</th>
+</tr>
+</thead>
+<tbody id="vaultTableBody"></tbody>
+</table>
+</section>
+<!-- INICIO: Script para listar Vaults -->
+<script>
+  async function mostrarVaults() {
+    try {
+      const total = await contract.vaultCount();
+      const tbody = document.getElementById("vaultTableBody");
+      tbody.innerHTML = "";
+
+      for (let i = 0; i < total; i++) {
+        const vault = await contract.getVaultInfo(i);
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+          <td class="p-2 text-center">${i}</td>
+          <td class="p-2 text-center">${vault.name}</td>
+          <td class="p-2 text-center">${vault.minParticipants}</td>
+          <td class="p-2 text-center">${ethers.utils.formatEther(vault.totalSaved)}</td>
+          <td class="p-2 text-center">${vault.active ? "✅ Activo" : "❌ Cerrado"}</td>
+        `;
+        tbody.appendChild(fila);
+      }
+    } catch (err) {
+      alert("Error al obtener los vaults: " + err.message);
+    }
+  }
+</script>
+<!-- FIN -->
+
+<div style="position: fixed; bottom: 20px; right: 20px; opacity: 0.3; z-index: 40;">
+<img alt="Marca E-MIND" class="w-16 h-16 rounded-full shadow-2xl ring-2 ring-green-500" src="arwh.png"/>
+</div>
+</body>
+</html>
